@@ -47,6 +47,7 @@ function App() {
 
   const stop = () => {
     clearInterval(id);
+    id = 0;
     setCount(0);
   };
 
@@ -68,6 +69,7 @@ function App() {
       case "d": {
         step === 1 && stop();
         step = 0;
+      
         break;
       }
 
