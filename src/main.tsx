@@ -11,12 +11,12 @@ appWindow.setAlwaysOnTop(pined);
 
 document
   .getElementById("titlebar-pin")
-  ?.addEventListener("click", async (e) => {
+  ?.addEventListener("click", async () => {
     await appWindow.setAlwaysOnTop(!pined);
     pined = !pined;
     const pinEl = document.getElementById("titlebar-pin");
     const newIcon = document.createElement("img");
- 
+
     newIcon.src = `https://api.iconify.design/material-symbols:push-pin${
       pined ? "" : "-outline"
     }.svg`;
@@ -25,7 +25,7 @@ document
   });
 document
   .getElementById("titlebar-minimize")
-  ?.addEventListener("click", () => appWindow.close());
+  ?.addEventListener("click", () => appWindow.minimize());
 document
   .getElementById("titlebar-close")
   ?.addEventListener("click", () => appWindow.close());
