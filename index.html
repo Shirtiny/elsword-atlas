@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <link rel="icon" type="image/svg+xml" href="/vite.svg" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Tauri + React + TS</title>
+    <style>
+      .window-body {
+        background: transparent;
+      }
+      .window-body:hover .titlebar {
+        opacity: 1;
+        top: 0;
+      }
+      .titlebar {
+        position: fixed;
+        top: -20px;
+        left: 0;
+        width: 100%;
+        height: 20px;
+        background: #00b7c3;
+        user-select: none;
+        display: flex;
+  
+        padding: 2px;
+        opacity: 0;
+        transition: all 0.2s;
+      }
+      .titlebar-button {
+        cursor: pointer;
+        display: inline-flex;
+        justify-content: center;
+        align-items: center;
+        width: 20px;
+        height: 100%;
+      }
+      .titlebar-button img {
+        height: 100%;
+      }
+      .titlebar-space {
+        pointer-events: none;
+        flex: 1;
+      }
+      .titlebar-button:hover {
+        background: #5bbec3;
+      }
+    </style>
+  </head>
+
+  <body data-tauri-drag-region class="window-body">
+    <div data-tauri-drag-region class="titlebar">
+      <div class="titlebar-button" id="titlebar-pin">
+        <img src="https://api.iconify.design/material-symbols:push-pin.svg" />
+      </div>
+      <div class="titlebar-space"></div>
+      <div class="titlebar-button" id="titlebar-minimize">
+        <img src="https://api.iconify.design/mdi:minimize.svg" alt="minimize" />
+      </div>
+      <div class="titlebar-button" id="titlebar-close">
+        <img src="https://api.iconify.design/mdi:close.svg" alt="close" />
+      </div>
+    </div>
+    <div id="root"></div>
+    <script type="module" src="/src/main.tsx"></script>
+  </bodydata-tauri-drag-region>
+</html>
