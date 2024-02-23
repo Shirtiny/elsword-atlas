@@ -5,3 +5,24 @@
 .logo.react:hover {
   filter: drop-shadow(0 0 2em #61dafb);
 }
+
+.app {
+  height: 100vh;
+  overflow: hidden;
+  display: flex;
+  padding: 0 8px;
+  align-items: center;
+}
+
+.app .space {
+  flex: 1;
+
+}
+.app .count {
+  width: 20px;
+  text-align: center;
+}
+.app .key {
+  width: 20px;
+  text-align: center;
+}

@@ -1,8 +1,15 @@
 // Prevents additional console window on Windows in release, DO NOT REMOVE!!
 #![cfg_attr(not(debug_assertions), windows_subsystem = "windows")]
+
 use rdev::{EventType, Key};
 // use std::time::Instant;
-use tauri::Manager;
+use tauri::{Manager, Window};
+
+// the payload type must implement `Serialize` and `Clone`.
+#[derive(Clone, serde::Serialize)]
+struct Payload {
+    message: String,
+}
 
 // Learn more about Tauri commands at https://tauri.app/v1/guides/features/command
 #[tauri::command]
@@ -13,10 +20,79 @@ fn greet(name: &str) -> String {
     format!("input, {}! ", name)
 }
 
-// the payload type must implement `Serialize` and `Clone`.
-#[derive(Clone, serde::Serialize)]
-struct Payload {
-    message: String,
+#[tauri::command]
+fn capture(window: Window) {
+    print!("capture start");
+    tauri::async_runtime::spawn(async move {
+        rdev::grab(move |event| {
+            let is_block: bool = match event.event_type {
+                // EventType::KeyPress(button) => match button {
+                //     Key::KeyZ => {
+                //         greet("keydown-z");
+                //         true
+                //     }
+                //     _ => false,
+                // },
+                EventType::KeyRelease(key) => match key {
+                    Key::KeyZ => {
+                        let _ = window.emit(
+                            "keyup",
+                            Payload {
+                                message: "z".into(),
+                            },
+                        );
+                        false
+                    }
+                    Key::KeyK => {
+                        let _ = window.emit(
+                            "keyup",
+                            Payload {
+                                message: "k".into(),
+                            },
+                        );
+                        false
+                    }
+                    Key::KeyA => {
+                        let _ = window.emit(
+                            "keyup",
+                            Payload {
+                                message: "a".into(),
+                            },
+                        );
+                        false
+                    }
+                    Key::KeyS => {
+                        let _ = window.emit(
+                            "keyup",
+                            Payload {
+                                message: "s".into(),
+                            },
+                        );
+                        false
+                    }
+                    Key::KeyD => {
+                        let _ = window.emit(
+                            "keyup",
+                            Payload {
+                                message: "d".into(),
+                            },
+                        );
+                        false
+                    }
+                    _ => false,
+                },
+                _ => false,
+            };
+            if is_block {
+                None
+            } else {
+                Some(event)
+            }
+        })
+        .unwrap();
+
+        format!("input,  ",)
+    });
 }
 
 fn main() {
@@ -26,44 +102,15 @@ fn main() {
             app.emit_all(
                 "event-name",
                 Payload {
-                    message: "Tauri is awesome!".into(),
+                    message: "App is setup!".into(),
                 },
             )
             .unwrap();
 
-            tauri::async_runtime::spawn(async move {
-                rdev::grab(move |event| {
-                    let is_block: bool = match event.event_type {
-                        // EventType::KeyPress(button) => match button {
-                        //     Key::KeyZ => {
-                        //         greet("keydown-z");
-                        //         true
-                        //     }
-                        //     _ => false,
-                        // },
-                        EventType::KeyRelease(button) => match button {
-                            Key::KeyZ => {
-                                greet("keyup-z");
-                                true
-                            }
-                            _ => false,
-                        },
-                        _ => false,
-                    };
-                    if is_block {
-                        None
-                    } else {
-                        Some(event)
-                    }
-                })
-                .unwrap();
-
-                format!("input,  ",)
-            });
-
             Ok(())
         })
         .invoke_handler(tauri::generate_handler![greet])
+        .invoke_handler(tauri::generate_handler![capture])
         .run(tauri::generate_context!())
         .expect("error while running tauri application");
 }
