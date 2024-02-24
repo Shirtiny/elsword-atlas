@@ -7,22 +7,45 @@
 }
 
 .app {
+  font-size: 14px;
   height: 100vh;
   overflow: hidden;
-  display: flex;
   padding: 0 8px;
+}
+
+.row {
+  display: flex;
   align-items: center;
+  border-bottom: 1px solid #dfdfdf;
 }
 
-.app .space {
+.footer {
+  display: flex;
+}
+
+.space {
   flex: 1;
-
 }
-.app .count {
+
+.title {
+  font-weight: 600;
+}
+
+.desc {
+ 
+}
+
+.desc.active {
+  color: red;
+  font-weight: bold;
+}
+
+.count {
   width: 20px;
   text-align: center;
 }
-.app .key {
-  width: 20px;
+
+.key {
+  font-size: 14px;
   text-align: center;
 }

@@ -79,6 +79,15 @@ fn capture(window: Window) {
                         );
                         false
                     }
+                    Key::ControlLeft => {
+                        let _ = window.emit(
+                            "keyup",
+                            Payload {
+                                message: "ctrlL".into(),
+                            },
+                        );
+                        false
+                    }
                     _ => false,
                 },
                 _ => false,
