@@ -37,6 +37,7 @@
         "title": "elsword atlas",
         "width": 120,
         "height": 70,
+        "transparent": true,
         "decorations": false
       }
     ],

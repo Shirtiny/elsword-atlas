@@ -11,6 +11,7 @@
   height: 100vh;
   overflow: hidden;
   padding: 0 8px;
+  background: #FFF;
 }
 
 .row {
@@ -32,7 +33,6 @@
 }
 
 .desc {
- 
 }
 
 .desc.active {

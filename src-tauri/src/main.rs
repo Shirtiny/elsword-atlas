@@ -99,8 +99,6 @@ fn capture(window: Window) {
             }
         })
         .unwrap();
-
-        format!("input,  ",)
     });
 }
 
