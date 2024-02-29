@@ -27,8 +27,9 @@
     "windows": [
       {
         "title": "elsword atlas",
-        "width": 120,
-        "height": 70,
+        "width": 160,
+        "height": 75,
+        "shadow": false,
         "transparent": true,
         "decorations": false
       }
