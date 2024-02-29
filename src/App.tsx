@@ -2,7 +2,7 @@ import { useCallback, useEffect, useRef, useState } from "react";
 import { invoke } from "@tauri-apps/api/core";
 import { listen } from "@tauri-apps/api/event";
 
-import "./App.css";
+import "./App.scss";
 import StatusRow from "./StatusRow";
 import Timer from "./timer";
 
@@ -139,12 +139,14 @@ function App() {
     <div className="app">
       <StatusRow
         title="155"
+        iconSrc="/155.webp"
         text={status155.text}
         count={status155.count}
         active={status155.active}
       />
       <StatusRow
         title="175"
+        iconSrc="/175.webp"
         text={status175.text}
         count={status175.count}
         active={status175.active}

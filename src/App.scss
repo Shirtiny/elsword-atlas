@@ -12,7 +12,7 @@
   overflow: hidden;
   padding: 0 8px;
   background: rgba(255, 255, 255, 0.9);
-  
+
 }
 
 .row {
@@ -30,16 +30,29 @@
 }
 
 .title {
-  font-weight: 600;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  &-text {
+    font-weight: 600;
+
+  }
+
+  &-icon {
+    height: 15px;
+  }
 }
+
+
 
 .desc {
+  &.active {
+    color: red;
+    font-weight: bold;
+  }
 }
 
-.desc.active {
-  color: red;
-  font-weight: bold;
-}
 
 .count {
   width: 20px;

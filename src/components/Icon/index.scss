@@ -1,0 +1,9 @@
+.icon {
+    display: inline-block;
+    overflow: hidden;
+
+    &>img {
+        vertical-align: top;
+        height: 100%;
+    }
+}
