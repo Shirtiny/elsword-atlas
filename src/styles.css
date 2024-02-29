@@ -4,8 +4,8 @@ body {
   padding: 0;
   margin: 0;
   background: transparent;
-  border-radius: 5px;
-  overflow: hidden;
+  /* border-radius: 5px;
+  overflow: hidden; */
 }
 
 * {
