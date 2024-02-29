@@ -1,9 +1,10 @@
 // Prevents additional console window on Windows in release, DO NOT REMOVE!!
 #![cfg_attr(not(debug_assertions), windows_subsystem = "windows")]
-
+mod setup;
 use rdev::{EventType, Key};
 // use std::time::Instant;
-use tauri::{Manager, Window};
+use tauri::Manager;
+use tauri::Window;
 
 // the payload type must implement `Serialize` and `Clone`.
 #[derive(Clone, serde::Serialize)]
@@ -104,20 +105,10 @@ fn capture(window: Window) {
 
 fn main() {
     tauri::Builder::default()
-        .setup(|app| {
-            // emit the `event-name` event to all webview windows on the frontend
-            app.emit_all(
-                "event-name",
-                Payload {
-                    message: "App is setup!".into(),
-                },
-            )
-            .unwrap();
-
-            Ok(())
-        })
-        .invoke_handler(tauri::generate_handler![greet])
-        .invoke_handler(tauri::generate_handler![capture])
+        .plugin(tauri_plugin_global_shortcut::Builder::new().build())
+        .plugin(tauri_plugin_shell::init())
+        .setup(setup::init)
+        .invoke_handler(tauri::generate_handler![greet, capture])
         .run(tauri::generate_context!())
         .expect("error while running tauri application");
 }

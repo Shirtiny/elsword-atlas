@@ -1,28 +1,27 @@
 import React from "react";
 import ReactDOM from "react-dom/client";
 import App from "./App";
-import { appWindow } from "@tauri-apps/api/window";
-
+import { getCurrent } from "@tauri-apps/api/window";
 import "./styles.css";
+
+const appWindow = getCurrent();
 
 let pined: boolean = true;
 
 appWindow.setAlwaysOnTop(pined);
 
-document
-  .getElementById("titlebar-pin")
-  ?.addEventListener("click", async () => {
-    await appWindow.setAlwaysOnTop(!pined);
-    pined = !pined;
-    const pinEl = document.getElementById("titlebar-pin");
-    const newIcon = document.createElement("img");
+document.getElementById("titlebar-pin")?.addEventListener("click", async () => {
+  await appWindow.setAlwaysOnTop(!pined);
+  pined = !pined;
+  const pinEl = document.getElementById("titlebar-pin");
+  const newIcon = document.createElement("img");
 
-    newIcon.src = `https://api.iconify.design/material-symbols:push-pin${
-      pined ? "" : "-outline"
-    }.svg`;
+  newIcon.src = `https://api.iconify.design/material-symbols:push-pin${
+    pined ? "" : "-outline"
+  }.svg`;
 
-    pinEl?.replaceChildren(newIcon);
-  });
+  pinEl?.replaceChildren(newIcon);
+});
 document
   .getElementById("titlebar-minimize")
   ?.addEventListener("click", () => appWindow.minimize());

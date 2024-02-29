@@ -1,5 +1,5 @@
 import { useCallback, useEffect, useRef, useState } from "react";
-import { invoke } from "@tauri-apps/api/tauri";
+import { invoke } from "@tauri-apps/api/core";
 import { listen } from "@tauri-apps/api/event";
 
 import "./App.css";
@@ -120,7 +120,7 @@ function App() {
     if (initFlag) return;
     invoke("capture");
     initFlag = true;
-    listen<Payload>("keyup", (event) => {
+    listen<Payload>("keyup", (event: any) => {
       console.log(event);
       handleKeyUp(event.payload.message);
     });
