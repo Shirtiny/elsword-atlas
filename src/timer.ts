@@ -14,11 +14,11 @@ class Timer {
 
   start = (cb: any) => {
     if (this.running) return;
+    this.running = true;
     this.id = setInterval(() => {
       this.sec += 1;
       cb?.(this.sec);
     }, 1000);
-    this.running = true;
   };
 
   startDebounced = debounce((cb: any) => {

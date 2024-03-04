@@ -21,6 +21,31 @@ fn greet(name: &str) -> String {
     format!("input, {}! ", name)
 }
 
+fn get_key_name(key: Key) -> String {
+    match key {
+        Key::KeyZ => "z".into(),
+        Key::KeyK => "k".into(),
+        Key::KeyA => "a".into(),
+        Key::KeyS => "s".into(),
+        Key::KeyD => "d".into(),
+        Key::KeyQ => "q".into(),
+        Key::KeyW => "w".into(),
+        Key::KeyE => "e".into(),
+        Key::KeyR => "r".into(),
+        Key::KeyF => "f".into(),
+        Key::KeyX => "x".into(),
+        Key::KeyC => "c".into(),
+        Key::KeyH => "h".into(),
+        Key::KeyI => "i".into(),
+        Key::KeyO => "o".into(),
+        Key::KeyV => "v".into(),
+        Key::ControlLeft => "ctrlL".into(),
+        _ => {
+            format!("unknown")
+        }
+    }
+}
+
 #[tauri::command]
 fn capture(window: Window) {
     print!("capture start");
@@ -35,61 +60,15 @@ fn capture(window: Window) {
                 //     _ => false,
                 // },
                 EventType::KeyRelease(key) => match key {
-                    Key::KeyZ => {
+                    _ => {
                         let _ = window.emit(
                             "keyup",
                             Payload {
-                                message: "z".into(),
+                                message: get_key_name(key),
                             },
                         );
                         false
                     }
-                    Key::KeyK => {
-                        let _ = window.emit(
-                            "keyup",
-                            Payload {
-                                message: "k".into(),
-                            },
-                        );
-                        false
-                    }
-                    Key::KeyA => {
-                        let _ = window.emit(
-                            "keyup",
-                            Payload {
-                                message: "a".into(),
-                            },
-                        );
-                        false
-                    }
-                    Key::KeyS => {
-                        let _ = window.emit(
-                            "keyup",
-                            Payload {
-                                message: "s".into(),
-                            },
-                        );
-                        false
-                    }
-                    Key::KeyD => {
-                        let _ = window.emit(
-                            "keyup",
-                            Payload {
-                                message: "d".into(),
-                            },
-                        );
-                        false
-                    }
-                    Key::ControlLeft => {
-                        let _ = window.emit(
-                            "keyup",
-                            Payload {
-                                message: "ctrlL".into(),
-                            },
-                        );
-                        false
-                    }
-                    _ => false,
                 },
                 _ => false,
             };
