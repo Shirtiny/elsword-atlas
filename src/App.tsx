@@ -14,9 +14,9 @@ interface Payload {
 }
 
 const locationMap: Record<string, string> = {
-  k: "上",
-  a: "左",
-  s: "下",
+  k: "155",
+  a: "156",
+  s: "175",
   d: "右",
 };
 
@@ -45,7 +45,7 @@ const get175Status = (count: number) => {
   return { active: false, text: "未激活", count };
 };
 
-const getBgStatus = (count: number) => {
+const get156Status = (count: number) => {
   if (count > 0 && count <= 60) {
     return { active: false, text: "冷却中", count };
   }
@@ -57,7 +57,7 @@ let step = 0;
 
 const timer155 = new Timer();
 const timer175 = new Timer();
-const timerBaigui = new Timer();
+const timer156 = new Timer();
 
 function App() {
   // const [greetMsg, setGreetMsg] = useState("");
@@ -67,7 +67,7 @@ function App() {
   });
   const [count155, setCount155] = useState(0);
   const [count175, setCount175] = useState(0);
-  const [countBG, setCountBG] = useState(0);
+  const [count156, setCount156] = useState(0);
   const titleKeyRef = useRef("");
 
   const set = (obj: Object) => {
@@ -121,21 +121,18 @@ function App() {
         break;
       }
       case "q":
-      case "w":
       case "e":
-      case "r":
-      case "f":
       case "x":
       case "c":
       case "h":
       case "i":
       case "o": {
         if (step < 1 && titleKeyRef.current === "a") {
-          timerBaigui.start((sec: number) => {
-            setCountBG((v) => v + 1);
+          timer156.start((sec: number) => {
+            setCount156((v) => v + 1);
             if (sec >= 60) {
-              timerBaigui.stop();
-              setCountBG(0);
+              timer156.stop();
+              setCount156(0);
             }
           });
         }
@@ -166,7 +163,7 @@ function App() {
 
   const status155 = get155Status(count155);
   const status175 = get175Status(count175);
-  const statusBG = getBgStatus(countBG);
+  const status156 = get156Status(count156);
 
   const currentTitle = locationMap[titleKeyRef.current];
 
@@ -188,9 +185,9 @@ function App() {
       />
       <StatusRow
         title="百鬼"
-        // iconSrc="/175.webp"
-        text={statusBG.text}
-        count={statusBG.count}
+        iconSrc="/156.webp"
+        text={status156.text}
+        count={status156.count}
       />
       <div className="footer">
         <div>{currentTitle}</div>
