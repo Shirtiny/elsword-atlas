@@ -46,7 +46,7 @@ const get175Status = (count: number) => {
 };
 
 const get156Status = (count: number) => {
-  if (count > 0 && count <= 60) {
+  if (count > 0 && count <= 25) {
     return { active: false, text: "冷却中", count };
   }
 
@@ -130,7 +130,7 @@ function App() {
         if (step < 1 && titleKeyRef.current === "a") {
           timer156.start((sec: number) => {
             setCount156((v) => v + 1);
-            if (sec >= 60) {
+            if (sec >= 25) {
               timer156.stop();
               setCount156(0);
             }
