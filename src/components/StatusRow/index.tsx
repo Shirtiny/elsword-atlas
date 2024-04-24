@@ -1,6 +1,7 @@
 import { FC, memo } from "react";
 import cls from "classnames";
-import Icon from "./components/Icon";
+import Icon from "../Icon";
+import "./index.scss";
 
 interface IProps {
   title: string;
@@ -8,6 +9,7 @@ interface IProps {
   text: string;
   count: number;
   active: boolean;
+  selected: boolean;
 }
 
 const StatusRow: FC<Partial<IProps>> = ({
@@ -16,10 +18,17 @@ const StatusRow: FC<Partial<IProps>> = ({
   active,
   text,
   count,
+  selected,
 }) => {
   return (
-    <div className="row">
-      <div className="title">{iconSrc ? <Icon className="title-icon" src={iconSrc} /> : title}</div>
+    <div className={cls("status-row", selected && "selected")}>
+      <div className="title">
+        {iconSrc ? (
+          <Icon className="title-icon" src={iconSrc} />
+        ) : (
+          <span className="title-text">{title}</span>
+        )}
+      </div>
       <div className="space"></div>
       <div className={cls("desc", active && "active")}>{text}</div>
       <div className="space"></div>

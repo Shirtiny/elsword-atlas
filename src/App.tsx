@@ -2,9 +2,11 @@ import { useCallback, useEffect, useRef, useState } from "react";
 import { invoke } from "@tauri-apps/api/core";
 import { listen } from "@tauri-apps/api/event";
 
-import "./App.scss";
-import StatusRow from "./StatusRow";
+import StatusRow from "./components/StatusRow";
+import Settings from "./components/Settings";
 import Timer from "./timer";
+
+import "./App.scss";
 
 let initFlag = false;
 
@@ -13,12 +15,11 @@ interface Payload {
   message: string;
 }
 
-const locationMap: Record<string, string> = {
-  k: "155",
-  a: "156",
-  s: "175",
-  d: "右",
-};
+enum titleKeys {
+  t155 = "k",
+  t156 = "a",
+  t175 = "s",
+}
 
 const get155Status = (count: number) => {
   if (!count) return { active: false, text: "未激活", count: 0 };
@@ -53,11 +54,20 @@ const get156Status = (count: number) => {
   return { active: false, text: "可用", count };
 };
 
+const getELGStatus = (count: number) => {
+  if (count > 0 && count <= 30) {
+    return { active: false, text: "冷却中", count };
+  }
+
+  return { active: false, text: "可用", count };
+};
+
 let step = 0;
 
 const timer155 = new Timer();
 const timer175 = new Timer();
 const timer156 = new Timer();
+const timerELG = new Timer();
 
 function App() {
   // const [greetMsg, setGreetMsg] = useState("");
@@ -68,6 +78,7 @@ function App() {
   const [count155, setCount155] = useState(0);
   const [count175, setCount175] = useState(0);
   const [count156, setCount156] = useState(0);
+  const [countELG, setCountELG] = useState(0);
   const titleKeyRef = useRef("");
 
   const set = (obj: Object) => {
@@ -80,7 +91,7 @@ function App() {
   // }
 
   const handleKeyUp = useCallback((key: string) => {
-    set({ key });
+    key !== "unknown" && set({ key });
 
     switch (key) {
       case "z": {
@@ -95,7 +106,7 @@ function App() {
 
         titleKeyRef.current = key;
 
-        if (key === "k") {
+        if (key === titleKeys.t155) {
           timer155.start(() => {
             setCount155((v) => v + 1);
           });
@@ -109,7 +120,7 @@ function App() {
         break;
       }
       case "ctrlL": {
-        if (step < 1 && titleKeyRef.current === "s") {
+        if (step < 1 && titleKeyRef.current === titleKeys.t175) {
           timer175.startDebounced((sec: number) => {
             setCount175((v) => v + 1);
             if (sec >= 60) {
@@ -121,13 +132,21 @@ function App() {
         break;
       }
       case "q":
+      case "w":
       case "e":
+      case "r":
+      case "f":
       case "x":
       case "c":
       case "h":
       case "i":
       case "o": {
-        if (step < 1 && titleKeyRef.current === "a") {
+        const special = ["q", "e", "x", "c", "h", "i", "o"];
+        if (
+          step < 1 &&
+          titleKeyRef.current === titleKeys.t156 &&
+          special.includes(key)
+        ) {
           timer156.start((sec: number) => {
             setCount156((v) => v + 1);
             if (sec >= 25) {
@@ -136,6 +155,13 @@ function App() {
             }
           });
         }
+        timerELG.start((sec: number) => {
+          setCountELG((v) => v + 1);
+          if (sec >= 30) {
+            timerELG.stop();
+            setCountELG(0);
+          }
+        });
         break;
       }
       case "v": {
@@ -164,35 +190,47 @@ function App() {
   const status155 = get155Status(count155);
   const status175 = get175Status(count175);
   const status156 = get156Status(count156);
+  const statusELG = getELGStatus(countELG);
 
-  const currentTitle = locationMap[titleKeyRef.current];
+  const currentTitleKey = titleKeyRef.current;
+
+  console.log("key", state.key);
 
   return (
     <div className="app">
-      <StatusRow
-        title="155"
-        iconSrc="/155.webp"
-        text={status155.text}
-        count={status155.count}
-        active={status155.active}
-      />
-      <StatusRow
-        title="175"
-        iconSrc="/175.webp"
-        text={status175.text}
-        count={status175.count}
-        active={status175.active}
-      />
-      <StatusRow
-        title="百鬼"
-        iconSrc="/156.webp"
-        text={status156.text}
-        count={status156.count}
-      />
-      <div className="footer">
-        <div>{currentTitle}</div>
-        <div className="space"></div>
-        <div className="key">{state.key}</div>
+      <div className="main">
+        <StatusRow
+          selected={currentTitleKey === titleKeys.t155}
+          title="155"
+          iconSrc="/155.webp"
+          text={status155.text}
+          count={status155.count}
+          active={status155.active}
+        />
+        <StatusRow
+          selected={currentTitleKey === titleKeys.t175}
+          title="175"
+          iconSrc="/175.webp"
+          text={status175.text}
+          count={status175.count}
+          active={status175.active}
+        />
+        <StatusRow
+          selected={currentTitleKey === titleKeys.t156}
+          title="百鬼"
+          iconSrc="/156.webp"
+          text={status156.text}
+          count={status156.count}
+        />
+        <StatusRow
+          title="埃力格"
+          text={statusELG.text}
+          count={statusELG.count}
+        />
+      </div>
+      <div className="side">
+        <div className="key">{state.key || "KEY"}</div>
+        <Settings />
       </div>
     </div>
   );

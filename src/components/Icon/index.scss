@@ -3,7 +3,7 @@
     overflow: hidden;
 
     &>img {
-        vertical-align: top;
+        display: block;
         height: 100%;
     }
 }

@@ -7,59 +7,31 @@
 }
 
 .app {
-  font-size: 14px;
+  font-size: 12px;
   height: 100vh;
   overflow: hidden;
-  padding: 0 8px;
   background: rgba(255, 255, 255, 0.9);
 
-}
-
-.row {
   display: flex;
-  align-items: center;
-  border-bottom: 1px solid #dfdfdf;
-}
 
-.footer {
-  display: flex;
-}
-
-.space {
-  flex: 1;
-}
-
-.title {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-
-  &-text {
-    font-weight: 600;
-
+  .main {
+    flex: 1;
+    overflow: hidden;
   }
 
-  &-icon {
-    height: 15px;
+  .side {
+    width: 30px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: space-between;
+    padding: 4px;
+    border-left: 1px solid #dfdfdf;
+
+    .key {
+      display: inline-block;
+      font-size: 12px;
+      text-align: center;
+    }
   }
-}
-
-
-
-.desc {
-  &.active {
-    color: red;
-    font-weight: bold;
-  }
-}
-
-
-.count {
-  width: 20px;
-  text-align: center;
-}
-
-.key {
-  font-size: 14px;
-  text-align: center;
 }
