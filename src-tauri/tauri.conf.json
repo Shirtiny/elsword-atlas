@@ -27,7 +27,8 @@
         "height": 100,
         "shadow": false,
         "transparent": true,
-        "decorations": false
+        "decorations": false,
+        "resizable": false
       }
     ]
   }

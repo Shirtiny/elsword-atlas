@@ -3,7 +3,6 @@ import { invoke } from "@tauri-apps/api/core";
 import { listen } from "@tauri-apps/api/event";
 
 import StatusRow from "../../components/StatusRow";
-import Settings from "../../components/Settings";
 import Timer from "../../timer";
 
 import "./index.scss";
@@ -21,6 +20,41 @@ enum titleKeys {
   t156 = "a",
   t175 = "s",
 }
+
+const KEYS = {
+  dir: {
+    up: "k",
+    left: "a",
+    down: "s",
+    right: "d",
+  },
+  skill: {
+    s1: "q",
+    s2: "w",
+    s3: "e",
+    s4: "r",
+    s5: "x",
+    es1: "i",
+    es2: "o",
+    es3: "c",
+    es4: "f",
+    es5: "h",
+  },
+  switch: "z",
+  awake: "ctrlL",
+};
+
+const SPECIAL_SKILL_KEYS = [
+  KEYS.skill.s1,
+  KEYS.skill.s3,
+  KEYS.skill.s5,
+  KEYS.skill.es3,
+  KEYS.skill.es1,
+  KEYS.skill.es2,
+  KEYS.skill.es5,
+];
+
+const ACE_SKILL_KEY = KEYS.skill.s5;
 
 const get155Status = (count: number) => {
   if (!count) return { active: false, text: "未激活", count: 0 };
@@ -91,14 +125,14 @@ function Panel() {
     key !== "unknown" && set({ key });
 
     switch (key) {
-      case "z": {
+      case KEYS.switch: {
         step = 1;
         break;
       }
-      case "k":
-      case "a":
-      case "s":
-      case "d": {
+      case KEYS.dir.up:
+      case KEYS.dir.left:
+      case KEYS.dir.down:
+      case KEYS.dir.right: {
         if (step < 1) break;
 
         titleKeyRef.current = key;
@@ -116,7 +150,7 @@ function Panel() {
 
         break;
       }
-      case "ctrlL": {
+      case KEYS.awake: {
         if (step < 1 && titleKeyRef.current === titleKeys.t175) {
           timer175.startDebounced((sec: number) => {
             setCount175((v) => v + 1);
@@ -128,21 +162,20 @@ function Panel() {
         }
         break;
       }
-      case "q":
-      case "w":
-      case "e":
-      case "r":
-      case "f":
-      case "x":
-      case "c":
-      case "h":
-      case "i":
-      case "o": {
-        const special = ["q", "e", "x", "c", "h", "i", "o"];
+      case KEYS.skill.s1:
+      case KEYS.skill.s2:
+      case KEYS.skill.s3:
+      case KEYS.skill.s4:
+      case KEYS.skill.s5:
+      case KEYS.skill.es1:
+      case KEYS.skill.es2:
+      case KEYS.skill.es3:
+      case KEYS.skill.es4:
+      case KEYS.skill.es5: {
         if (
           step < 1 &&
           titleKeyRef.current === titleKeys.t156 &&
-          special.includes(key)
+          SPECIAL_SKILL_KEYS.includes(key)
         ) {
           timer156.start((sec: number) => {
             setCount156((v) => v + 1);
@@ -151,7 +184,7 @@ function Panel() {
               setCount156(0);
             }
           });
-        } else if (key === "x") {
+        } else if (key === ACE_SKILL_KEY) {
           const stop = () => {
             timerAce.stop();
             setCountAce(0);
