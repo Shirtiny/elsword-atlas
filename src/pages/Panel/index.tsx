@@ -7,13 +7,15 @@ import StatusRow from "../../components/StatusRow";
 import Icon from "../../components/Icon";
 import {
   ACE_SKILL_KEY,
+  FEATURES,
   KEYS,
   SPECIAL_SKILL_KEYS,
-  titleKeys,
-} from "../../config";
+  TITLE_KEYS,
+} from "../../config/constant";
 
 import "./index.scss";
 import useTimer from "../../hooks/useTimer";
+import { getStatus } from "../../config/status";
 
 let initFlag = false;
 
@@ -21,43 +23,6 @@ let initFlag = false;
 interface Payload {
   message: string;
 }
-
-const get155Status = (count: number) => {
-  if (!count) return { active: false, text: "未激活", count: 0 };
-
-  const v = count % 15;
-  let name = "";
-  if (v <= 2) name = "柔韧";
-  if (v > 2 && v <= 5) name = "强韧";
-  if (v > 5 && v <= 10) name = "强烈";
-  if (v > 10 && v <= 15) name = "超越";
-
-  return { active: name === "超越", text: `${name}+15%`, count: v };
-};
-
-const get175Status = (count: number) => {
-  if (count > 0 && count <= 40) {
-    return { active: true, text: "伤害+15%", count };
-  }
-
-  if (count > 40 && count <= 60) {
-    return { active: false, text: "冷却中", count };
-  }
-
-  return { active: false, text: "未激活", count };
-};
-
-const get156Status = (count: number) => {
-  if (count > 0 && count <= 25) {
-    return { active: false, text: "冷却中", count };
-  }
-
-  return { active: false, text: "可用", count };
-};
-
-const getAceStatus = (count: number) => {
-  return { active: false, text: "已经过", count };
-};
 
 let step = 0;
 
@@ -69,18 +34,18 @@ function Panel() {
   });
 
   const [count155, timer155] = useTimer({
-    name: "155",
+    name: FEATURES.t155,
   });
   const [count175, timer175] = useTimer({
-    name: "175",
+    name: FEATURES.t175,
     point: (sec) => sec >= 60,
   });
   const [count156, timer156] = useTimer({
-    name: "156",
+    name: FEATURES.t156,
     point: (sec) => sec >= 25,
   });
   const [countAce, timerAce] = useTimer({
-    name: "Ace",
+    name: FEATURES.fAce,
     point: (sec) => sec >= 30,
   });
 
@@ -109,11 +74,11 @@ function Panel() {
 
         titleKeyRef.current = key;
 
-        if (key === titleKeys.t155) {
+        if (key === TITLE_KEYS.t155) {
           timer155.stop();
           timer155.start((sec) => {
             const leave =
-              titleKeyRef.current !== titleKeys.t155 &&
+              titleKeyRef.current !== TITLE_KEYS.t155 &&
               [10, 5, 2].includes(sec);
 
             if (sec >= 15 || leave) {
@@ -127,7 +92,7 @@ function Panel() {
         break;
       }
       case KEYS.awake: {
-        if (step < 1 && titleKeyRef.current === titleKeys.t175) {
+        if (step < 1 && titleKeyRef.current === TITLE_KEYS.t175) {
           timer175.startDebounced();
         }
         break;
@@ -144,7 +109,7 @@ function Panel() {
       case KEYS.skill.es5: {
         if (
           step < 1 &&
-          titleKeyRef.current === titleKeys.t156 &&
+          titleKeyRef.current === TITLE_KEYS.t156 &&
           SPECIAL_SKILL_KEYS.includes(key)
         ) {
           timer156.start();
@@ -181,10 +146,10 @@ function Panel() {
     init();
   }, []);
 
-  const status155 = get155Status(count155);
-  const status175 = get175Status(count175);
-  const status156 = get156Status(count156);
-  const statusAce = getAceStatus(countAce);
+  const status155 = getStatus(FEATURES.t155, count155);
+  const status175 = getStatus(FEATURES.t175, count175);
+  const status156 = getStatus(FEATURES.t156, count156);
+  const statusAce = getStatus(FEATURES.fAce, countAce);
 
   const currentTitleKey = titleKeyRef.current;
 
@@ -194,7 +159,7 @@ function Panel() {
     <div className="panel-page">
       <div className="main">
         <StatusRow
-          selected={currentTitleKey === titleKeys.t155}
+          selected={currentTitleKey === TITLE_KEYS.t155}
           title="155"
           iconSrc="/155.webp"
           text={status155.text}
@@ -202,7 +167,7 @@ function Panel() {
           active={status155.active}
         />
         <StatusRow
-          selected={currentTitleKey === titleKeys.t175}
+          selected={currentTitleKey === TITLE_KEYS.t175}
           title="175"
           iconSrc="/175.webp"
           text={status175.text}
@@ -210,7 +175,7 @@ function Panel() {
           active={status175.active}
         />
         <StatusRow
-          selected={currentTitleKey === titleKeys.t156}
+          selected={currentTitleKey === TITLE_KEYS.t156}
           title="百鬼"
           iconSrc="/156.webp"
           text={status156.text}

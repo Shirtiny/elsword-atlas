@@ -1,8 +1,16 @@
-export enum titleKeys {
-  t155 = "k",
-  t156 = "a",
-  t175 = "s",
+export enum FEATURES {
+  t155 = "t155",
+  t156 = "t156",
+  t175 = "t175",
+  t135 = "t135",
+  fAce = "fAce",
 }
+
+export const TITLE_KEYS = {
+  [FEATURES.t155]: "k",
+  [FEATURES.t156]: "a",
+  [FEATURES.t175]: "s",
+};
 
 export const KEYS = {
   dir: {
