@@ -420,6 +420,11 @@
   resolved "https://registry.yarnpkg.com/@rollup/rollup-win32-x64-msvc/-/rollup-win32-x64-msvc-4.12.0.tgz#9ffdf9ed133a7464f4ae187eb9e1294413fab235"
   integrity sha512-ZYmr5mS2wd4Dew/JjT0Fqi2NPB/ZhZ2VvPp7SmvPZb4Y1CG/LRcS6tcRo2cYU7zLK5A7cdbhWnnWmUjoI4qapg==
 
+"@shirtiny/logger@^5.0.0":
+  version "5.0.0"
+  resolved "https://registry.yarnpkg.com/@shirtiny/logger/-/logger-5.0.0.tgz#03ae5925b8016dd3b19f21ab84f0b8bf98dd03b2"
+  integrity sha512-hOJrfYwCJNPxZ+t6u7sfCb/oUck1/5LqS9UGRX3Y0a0W+MGPcj9ryUrldA/WA3oHKJFBPnskGh1/bmt95pHR9Q==
+
 "@tauri-apps/api@2.0.0-beta.2":
   version "2.0.0-beta.2"
   resolved "https://registry.yarnpkg.com/@tauri-apps/api/-/api-2.0.0-beta.2.tgz#adec036f5ece03b88f59fdb7fa18e315c77d0738"

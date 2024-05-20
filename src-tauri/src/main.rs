@@ -40,6 +40,7 @@ fn get_key_name(key: Key) -> String {
         Key::KeyO => "o".into(),
         Key::KeyV => "v".into(),
         Key::ControlLeft => "ctrlL".into(),
+        Key::Num0 => "0".into(),
         _ => {
             format!("unknown")
         }

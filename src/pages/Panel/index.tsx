@@ -3,10 +3,17 @@ import { invoke } from "@tauri-apps/api/core";
 import { listen } from "@tauri-apps/api/event";
 
 import StatusRow from "../../components/StatusRow";
-import Timer from "../../timer";
+
+import Icon from "../../components/Icon";
+import {
+  ACE_SKILL_KEY,
+  KEYS,
+  SPECIAL_SKILL_KEYS,
+  titleKeys,
+} from "../../config";
 
 import "./index.scss";
-import Icon from "../../components/Icon";
+import useTimer from "../../hooks/useTimer";
 
 let initFlag = false;
 
@@ -14,47 +21,6 @@ let initFlag = false;
 interface Payload {
   message: string;
 }
-
-enum titleKeys {
-  t155 = "k",
-  t156 = "a",
-  t175 = "s",
-}
-
-const KEYS = {
-  dir: {
-    up: "k",
-    left: "a",
-    down: "s",
-    right: "d",
-  },
-  skill: {
-    s1: "q",
-    s2: "w",
-    s3: "e",
-    s4: "r",
-    s5: "x",
-    es1: "i",
-    es2: "o",
-    es3: "c",
-    es4: "f",
-    es5: "h",
-  },
-  switch: "z",
-  awake: "ctrlL",
-};
-
-const SPECIAL_SKILL_KEYS = [
-  KEYS.skill.s1,
-  KEYS.skill.s3,
-  KEYS.skill.s5,
-  KEYS.skill.es3,
-  KEYS.skill.es1,
-  KEYS.skill.es2,
-  KEYS.skill.es5,
-];
-
-const ACE_SKILL_KEY = KEYS.skill.s5;
 
 const get155Status = (count: number) => {
   if (!count) return { active: false, text: "未激活", count: 0 };
@@ -95,22 +61,28 @@ const getAceStatus = (count: number) => {
 
 let step = 0;
 
-const timer155 = new Timer();
-const timer175 = new Timer();
-const timer156 = new Timer();
-const timerAce = new Timer();
-
 function Panel() {
-  // const [greetMsg, setGreetMsg] = useState("");
-  // const [name, setName] = useState("");
+  const titleKeyRef = useRef("");
+
   const [state, setState] = useState({
     key: "",
   });
-  const [count155, setCount155] = useState(0);
-  const [count175, setCount175] = useState(0);
-  const [count156, setCount156] = useState(0);
-  const [countAce, setCountAce] = useState(0);
-  const titleKeyRef = useRef("");
+
+  const [count155, timer155] = useTimer({
+    name: "155",
+  });
+  const [count175, timer175] = useTimer({
+    name: "175",
+    point: (sec) => sec >= 60,
+  });
+  const [count156, timer156] = useTimer({
+    name: "156",
+    point: (sec) => sec >= 25,
+  });
+  const [countAce, timerAce] = useTimer({
+    name: "Ace",
+    point: (sec) => sec >= 30,
+  });
 
   const set = (obj: Object) => {
     setState((s) => ({ ...s, ...obj }));
@@ -138,12 +110,16 @@ function Panel() {
         titleKeyRef.current = key;
 
         if (key === titleKeys.t155) {
-          timer155.start(() => {
-            setCount155((v) => v + 1);
-          });
-        } else {
           timer155.stop();
-          setCount155(0);
+          timer155.start((sec) => {
+            const leave =
+              titleKeyRef.current !== titleKeys.t155 &&
+              [10, 5, 2].includes(sec);
+
+            if (sec >= 15 || leave) {
+              timer155.stop();
+            }
+          });
         }
 
         step = 0;
@@ -152,13 +128,7 @@ function Panel() {
       }
       case KEYS.awake: {
         if (step < 1 && titleKeyRef.current === titleKeys.t175) {
-          timer175.startDebounced((sec: number) => {
-            setCount175((v) => v + 1);
-            if (sec >= 60) {
-              timer175.stop();
-              setCount175(0);
-            }
-          });
+          timer175.startDebounced();
         }
         break;
       }
@@ -177,30 +147,18 @@ function Panel() {
           titleKeyRef.current === titleKeys.t156 &&
           SPECIAL_SKILL_KEYS.includes(key)
         ) {
-          timer156.start((sec: number) => {
-            setCount156((v) => v + 1);
-            if (sec >= 25) {
-              timer156.stop();
-              setCount156(0);
-            }
-          });
+          timer156.start();
         } else if (key === ACE_SKILL_KEY) {
-          const stop = () => {
-            timerAce.stop();
-            setCountAce(0);
-          };
-          stop();
-          timerAce.start((sec: number) => {
-            setCountAce((v) => v + 1);
-            if (sec >= 30) {
-              stop();
-            }
-          });
+          timerAce.stop();
+          timerAce.start();
         }
 
         break;
       }
       case "v": {
+        break;
+      }
+      case KEYS.reset: {
         break;
       }
 
